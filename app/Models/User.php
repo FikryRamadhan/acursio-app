@@ -23,7 +23,8 @@ class User extends Authenticatable
         return $data;
     }
 
-    public function updateUser($request){
+    public function updateUser($request)
+    {
         return $this->update($request);
     }
 
@@ -54,8 +55,8 @@ class User extends Authenticatable
                     <i class="bi bi-error-circle me-50"></i> Icon Left
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButtonIcon">
-                    <a class="dropdown-item edit" data-get-href="'. route('user.get', $data->id) .'" data-update-href="'. route('user.update', $data->id).'"><i class="bi bi-pencil-square me-50"></i> Edit</a>
-                    <a class="dropdown-item delete" data-delete-message="Yakin Ingin Menghapus Data '. $data->name.'" data-delete-href="'. route('user.destroy', $data->id). '"><i class="bi bi-trash3 me-50"></i> Delete</a>
+                    <a class="dropdown-item edit" data-get-href="' . route('user.get', $data->id) . '" data-update-href="' . route('user.update', $data->id) . '"><i class="bi bi-pencil-square me-50"></i> Edit</a>
+                    <a class="dropdown-item delete" data-delete-message="Yakin Ingin Menghapus Data ' . $data->name . '" data-delete-href="' . route('user.destroy', $data->id) . '"><i class="bi bi-trash3 me-50"></i> Delete</a>
                     </div>
                 </div>
 
@@ -64,5 +65,10 @@ class User extends Authenticatable
             })
             ->rawColumns(['action'])
             ->make(true);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class);
     }
 }
