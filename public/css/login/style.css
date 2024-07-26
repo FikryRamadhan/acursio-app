@@ -8,7 +8,7 @@
 body{
   margin: 0;
   padding: 0;
-  background: linear-gradient(120deg,#2980b9, #8e44ad);
+  background: linear-gradient(120deg,#402E7A, #4C3BCF);
   height: 100vh;
   overflow: hidden;
 }
@@ -85,6 +85,7 @@ form .txt_field{
 input[type="submit"]{
   width: 100%;
   height: 50px;
+  margin-bottom: 24px;
   border: 1px solid;
   background: #2691d9;
   border-radius: 25px;

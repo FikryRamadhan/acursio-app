@@ -13,12 +13,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::redirect('/', '/dashboard');
+Route::redirect('/', '/login');
 
-Route::get('dashboard', [App\Http\Controllers\DashboardContoller::class, 'index'])->name('dashboard');
+Route::get('dashboard', [App\Http\Controllers\DashboardContoller::class, 'index'])->name('dashboard')->middleware('auth');
 
 // Login
 Route::get('login', [App\Http\Controllers\LoginController::class, 'index'])->name('login');
+Route::post('authLogin', [App\Http\Controllers\LoginController::class, 'login'])->name('authLogin');
+
+// Logout
+// Sementara get dulu karena belum ada fitur logoutnya, sebatas test logout
+Route::get('logout', [App\Http\Controllers\LogoutController::class, 'logout'])->middleware('auth')->name('logout');
 
 Route::prefix('user')->group(function () {
     Route::get('', [App\Http\Controllers\UserController::class, 'index'])->name('user.index');
