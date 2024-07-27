@@ -17,18 +17,16 @@
 <body>
     <div class="center">
         <h1>Login</h1>
-        <form method="post" action="{{ route('authLogin') }}">
+        <form method="post" id="loginForm">
             @csrf
             @method('POST')
             <div class="txt_field">
-                <input type="email" name="email" value="{{ old('email') }}"
-                    @error('email') placeholder="{{ $message }}"@enderror autofocus>
+                <input type="email" name="email" value="{{ old('email') }}" id="email" autofocus>
                 <span></span>
                 <label>Email</label>
             </div>
             <div class="txt_field">
-                <input type="password" name="password" value="{{ old('password') }}"
-                    @error('password') placeholder="{{ $message }}"@enderror>
+                <input type="password" name="password" value="{{ old('password') }}" id="password">
                 <span></span>
                 <label>Password</label>
             </div>
@@ -37,21 +35,71 @@
         </form>
     </div>
 
+    {{-- Jquery --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous"></script>
+
     {{-- SweetAlert --}}
     <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.js') }}"></script>
 
-    {{-- Error Login --}}
-    @session('error')
-        <script>
-            Swal.fire({
-                icon: "error",
-                title: "Gagal Login",
-                text: "Email dan password yang anda masukan tidak sesuai!",
-                footer: 'Silahkan Login kembali'
+    <script>
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '{{ url('/authLogin') }}',
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(function() {
+                                window.location.href =
+                                    '/dashboard'; // Redirect setelah sukses
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            var errorMessages = '';
+                            $.each(errors, function(key, value) {
+                                errorMessages += value[0] + '<br>';
+                            });
+
+                            Swal.fire({
+                                title: 'Tidak boleh ada yang kosong!',
+                                html: errorMessages,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        } else if (xhr.status === 401) {
+                            Swal.fire({
+                                title: 'Login Gagal!',
+                                text: xhr.responseJSON.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An unexpected error occurred.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    }
+                });
             });
-        </script>
-    @endsession
+        });
+    </script>
+
 </body>
 
 </html>
