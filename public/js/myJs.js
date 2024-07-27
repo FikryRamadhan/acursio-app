@@ -312,6 +312,7 @@ const ajaxSuccessHandling = (response) => {
 };
 
 const ajaxErrorHandling = (error, $form = null) => {
+    console.log(error);
     let { status, responseJSON } = error;
     let { message } = responseJSON;
 

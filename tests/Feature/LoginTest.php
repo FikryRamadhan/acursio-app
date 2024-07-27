@@ -24,19 +24,17 @@ class LoginTest extends TestCase
 
     public function test_user_can_login_with_valid_credentials()
     {
-        $user = User::factory()->create([
-            'password' => bcrypt($password = 'password123'),
-        ]);
+        $user = User::factory()->create();
 
         $response = $this->postJson('/authLogin', [
             'email' => $user->email,
-            'password' => 'password123',
+            'password' => 'password',
         ]);
 
         $response->assertStatus(200);
         $response->assertJson([
             'status' => 'success',
-            'message' => 'Login successful',
+            'message' => 'Login berhasil',
         ]);
 
         $this->assertAuthenticatedAs($user);
@@ -44,15 +42,17 @@ class LoginTest extends TestCase
 
     public function test_user_cannot_login_with_invalid_credentials()
     {
+        $user = User::factory()->create();
+
         $response = $this->postJson('/authLogin', [
-            'email' => 'hudson.bertrand@example.org',
+            'email' => $user->email,
             'password' => 'passworda',
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(401);
         $response->assertJson([
             'status' => 'error',
-            'message' => 'Invalid credentials',
+            'message' => 'Email dan password yang anda masukan tidak sesuai!',
         ]);
 
         $this->assertGuest();

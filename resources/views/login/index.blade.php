@@ -5,6 +5,7 @@
 <head>
     <meta charset="utf-8">
     <title>Animated Login Form | CodingNepal</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     {{-- My Css --}}
     <link rel="stylesheet" href="{{ asset('css/login/style.css') }}">
@@ -31,7 +32,7 @@
                 <label>Password</label>
             </div>
             <div class="pass">Forgot Password?</div>
-            <input type="submit" value="Login">
+            <input type="submit" value="Login" id="loginButton">
         </form>
     </div>
 
@@ -43,59 +44,45 @@
     <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('assets/extensions/sweetalert2/sweetalert2.js') }}"></script>
 
+    {{-- MyJs --}}
+    <script src="{{ asset('js/myJs.js') }}"></script>
+
     <script>
-        $(document).ready(function() {
-            $('#loginForm').on('submit', function(e) {
+        const handleLogin = (url, data) => {
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                beforeSend: (xhr) => {
+                    xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                    processingButton($("#loginButton")); // Mengaktifkan loading pada tombol login
+                },
+                success: (response) => {
+                    processingButtonDone($("#loginButton"), 'Login Berhasil');
+                    successNotification('Login berhasil!');
+                    // Redirect atau aksi lain setelah login berhasil
+                    setTimeout(() => {
+                        window.location.href = response.redirectUrl || '/dashboard';
+                    }, 2000);
+                },
+                error: (error) => {
+                    processingButtonDone($("#loginButton"), 'Login Gagal');
+                    ajaxErrorHandling(error, $("#loginForm"));
+                }
+            });
+        };
+
+        $(document).ready(() => {
+            $("#loginForm").on("submit", (e) => {
                 e.preventDefault();
 
-                $.ajax({
-                    url: '{{ url('/authLogin') }}',
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message,
-                                icon: 'success',
-                                confirmButtonText: 'OK'
-                            }).then(function() {
-                                window.location.href =
-                                    '/dashboard'; // Redirect setelah sukses
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            var errors = xhr.responseJSON.errors;
-                            var errorMessages = '';
-                            $.each(errors, function(key, value) {
-                                errorMessages += value[0] + '<br>';
-                            });
-
-                            Swal.fire({
-                                title: 'Tidak boleh ada yang kosong!',
-                                html: errorMessages,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        } else if (xhr.status === 401) {
-                            Swal.fire({
-                                title: 'Login Gagal!',
-                                text: xhr.responseJSON.message,
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        } else {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'An unexpected error occurred.',
-                                icon: 'error',
-                                confirmButtonText: 'OK'
-                            });
-                        }
-                    }
-                });
+                const data = {
+                    email: $("#email").val(),
+                    password: $("#password").val()
+                };
+                handleLogin('authLogin', data);
             });
         });
     </script>
