@@ -60,7 +60,6 @@
                     processingButton($("#loginButton")); // Mengaktifkan loading pada tombol login
                 },
                 success: (response) => {
-                    processingButtonDone($("#loginButton"), 'Login Berhasil');
                     successNotification('Login berhasil!');
                     // Redirect atau aksi lain setelah login berhasil
                     setTimeout(() => {
@@ -68,8 +67,7 @@
                     }, 2000);
                 },
                 error: (error) => {
-                    processingButtonDone($("#loginButton"), 'Login Gagal');
-                    ajaxErrorHandling(error, $("#loginForm"));
+                    errorNotification('Cek You Field')
                 }
             });
         };

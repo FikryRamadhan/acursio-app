@@ -84,7 +84,7 @@ aria-labelledby="myModalLabel1" aria-hidden="true">
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="number" name="password" id="password" class="form-control" placeholder="Masukan No.Hp Pegawai">
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Masukan No.Hp Pegawai">
                         </div>
                     </div>
                     <div class="col-lg-6">

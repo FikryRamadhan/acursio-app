@@ -184,6 +184,8 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'Datatables' => Yajra\DataTables\Facades\DataTables::class,
+        'Template' => \App\MyClass\Template::class,
+        'ValidateUserPassword' =>  \App\Rules\ValidateUserPassword::class
     ])->toArray(),
 
 ];

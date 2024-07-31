@@ -303,7 +303,7 @@ const warningNotification = (message) => {
 };
 
 const errorNotification = (message) => {
-    notification(message, "danger");
+    notification(message, "error");
 };
 
 const ajaxSuccessHandling = (response) => {
@@ -312,7 +312,6 @@ const ajaxSuccessHandling = (response) => {
 };
 
 const ajaxErrorHandling = (error, $form = null) => {
-    console.log(error);
     let { status, responseJSON } = error;
     let { message } = responseJSON;
 

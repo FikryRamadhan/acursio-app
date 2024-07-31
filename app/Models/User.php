@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -20,18 +20,35 @@ class User extends Authenticatable
     public static function createUser($request)
     {
         $data = self::create($request);
+        $password = ($request['password']);
+        $data->savePassword($password);
         return $data;
     }
 
     public function updateUser($request)
     {
-        return $this->update($request);
+        $this->update($request);
+        if ($request['password']) {
+            $this->savePassword($request['password']);
+        }
+        return $this;
     }
 
     public function deleteUser()
     {
         return $this->delete();
     }
+
+    public function savePassword($password){
+        return $this->update([
+            'password' => bcrypt($password)
+        ]);
+    }
+
+	public function comparePassword($password)
+	{
+		return Hash::check($password, $this->password);
+	}
 
     /**
      *function For DataTable
