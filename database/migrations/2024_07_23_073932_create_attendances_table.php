@@ -17,9 +17,10 @@ return new class extends Migration
             $table->date('date');
             $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
-            $table->time('overtime')->nullable();
             $table->time('pause')->nullable();
             $table->time('resume')->nullable();
+            $table->enum('status',['ongoing', 'completed'])->default('ongoing');
+            $table->time('total')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

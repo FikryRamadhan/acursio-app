@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     public function index(Request $request){
+
         if ($request->ajax()) {
             return User::DataTable($request);
         }
@@ -43,14 +44,14 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             User::createUser($request->all());
-            DB::commit(); 
+            DB::commit();
 
             return Response::success([
                 'message' => 'Data User Berhasil Disimpan'
             ]);
         } catch (Exception $e) {
             DB::rollBack();
-            
+
             return Response::error($e);
         }
     }

@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function(){
     // Dahboard Route
     Route::redirect('/', '/dashboard');
     Route::get('dashboard', [App\Http\Controllers\DashboardContoller::class, 'index'])->name('dashboard');
-    
+
     // Logout
     // Sementara get dulu karena belum ada fitur logoutnya, sebatas test logout
     Route::get('logout', [App\Http\Controllers\LogoutController::class, 'logout'])->name('logout');
@@ -54,4 +54,13 @@ Route::middleware('auth')->group(function(){
         Route::put('update-password', [\App\Http\Controllers\SettingController::class, 'updatePassword'])->name('setting.update-password');
     });
 
+    // for Attendance
+    Route::prefix('attendance')->group(function() {
+        Route::get('', [App\Http\Controllers\AttendanceController::class, 'indexUser'])->name('attendance.index');
+        Route::post('checkin', [App\Http\Controllers\AttendanceController::class, 'checkIn'])->name('attendance.checkin');
+        Route::post('pause', [App\Http\Controllers\AttendanceController::class, 'pause'])->name('attendance.pause');
+        Route::post('resume', [App\Http\Controllers\AttendanceController::class, 'resume'])->name('attendance.resume');
+        Route::post('checkout', [App\Http\Controllers\AttendanceController::class, 'checkOut'])->name('attendance.checkout');
+        Route::post('destroy', [App\Http\Controllers\AttendanceController::class, 'destroy'])->name('attendance.destroy');
+    });
 });

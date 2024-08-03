@@ -1,8 +1,9 @@
-<?php 
+<?php
 
 namespace App\MyClass;
 
 use App\Rules\CheckPassword;
+use Illuminate\Http\Request;
 
 class Validations
 {
@@ -68,5 +69,14 @@ class Validations
 			'confirm_password.required' => 'Wajib diisi',
 			'confirm_password.same' => 'Password baru yang dimasukkan tidak sama',
 		]);
+    }
+
+    public static function attendance(Request $request){
+        $request->validate([
+            'attendance_id' => 'required|exists:attendances,id',
+        ], [
+            'required' => 'Anda belum check in',
+            'exists' => 'Tidak ada absen yang sesuai'
+        ]);
     }
 }

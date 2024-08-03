@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Attendances>
  */
-class AttendancesFactory extends Factory
+class AttendanceFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,10 @@ class AttendancesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => rand(1,10),
+            'date' => now(),
+            'check_in' => $this->faker->time($format = 'H:i:s', $max = 'now'),
+            'check_out' => $this->faker->time($format = 'H:i:s', $max = 'now'),
         ];
     }
 }
